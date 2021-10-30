@@ -1,24 +1,48 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import axios from 'axios';
 import './App.css';
+import Movie from './Movie';
 
 function App() {
+
+  const[movies, setMovies] = useState();
+  let [loding, setLoding] = useState(false);
+
+  //sort by rating
+  axios.get("https://yts-proxy.nomadcoders1.now.sh/list_movies.json?sort_by=rating")
+  .then((result) => {
+    setLoding(false)
+    setMovies([...result.data.data.movies])
+  })
+  .catch(() => { 
+    setLoding(false)
+    console.log("실패")})
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    {
+      loding === true
+      ? (<div>
+          <p> Loading...</p>
+      </div>)
+      : (<section className="container">
+      <div className="movies">
+      {
+        movies.map((array, i) => {
+          return <Movie id={array.id}
+          title={array.title}
+          year={array.year}
+          summary={array.summary}
+          rating={array.rating}
+          poster={array.medium_cover_image} 
+          key={i} /> 
+        })
+      }
+      </div>
+    </section>)
+    }
+    
+    </>
   );
 }
 
