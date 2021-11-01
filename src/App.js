@@ -6,7 +6,7 @@ import Movie from './Movie';
 function App() {
 
   const[movies, setMovies] = useState();
-  let [loding, setLoding] = useState(false);
+  let [loding, setLoding] = useState(true);
 
   //sort by rating
   axios.get("https://yts-proxy.nomadcoders1.now.sh/list_movies.json?sort_by=rating")
@@ -19,30 +19,31 @@ function App() {
     console.log("실패")})
   
   return (
-    <>
+    <section className="container">
     {
       loding === true
-      ? (<div>
+      ? (<div className="loader">
           <p> Loading...</p>
       </div>)
-      : (<section className="container">
+      : (
       <div className="movies">
       {
-        movies.map((array, i) => {
+        movies && movies.map((array, i) => {
           return <Movie id={array.id}
           title={array.title}
           year={array.year}
           summary={array.summary}
           rating={array.rating}
           poster={array.medium_cover_image} 
+          genres={array.genres}
           key={i} /> 
         })
       }
       </div>
-    </section>)
+      )
     }
     
-    </>
+    </section>
   );
 }
 
